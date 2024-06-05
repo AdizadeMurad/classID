@@ -12,7 +12,18 @@ const users = [{
 }]
 
 app.get('/users', (req, res) => {
-    res.send(users)
+    try {
+        const token = req.headers.authorization
+        if (!token) {
+            return res.status(401).json({ message: 'UnAuthorized' })
+        }
+
+        const decoded = jwt.verify(token, 'shhhhh');
+        res.send(users)
+
+    } catch (error) {
+        return res.status(401).json({ message: error })
+    }
 })
 
 app.post('/register', (req, res) => {
